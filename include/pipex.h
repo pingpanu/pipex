@@ -6,7 +6,7 @@
 /*   By: user <user@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/09 21:02:45 by user              #+#    #+#             */
-/*   Updated: 2022/08/10 10:30:11 by user             ###   ########.fr       */
+/*   Updated: 2022/08/11 15:25:18 by pingpanu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 /* include for all allowed function
 ** note: unistd.h and stdlib.h shall not be included as it already 
 **       had been include in libft.h*/
+# include "libft.h"
 # include <stdio.h>
 # include <string.h>
 # include <fcntl.h>
@@ -23,5 +24,8 @@
 # include <errno.h>
 
 /*these are mandatory function*/
-void    pipex(int file1, int file2, char **argv, char **envp);
+void	error_exit(char *message, int ret);
+void	pipex(int file1, int file2, char **argv, char **envp);
+void	free_charr(char **arr);
+char	*get_cmdpath(char *cmd, char **envp);
 #endif

@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   mandatory.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: user <user@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: pingpanu <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/08/09 20:56:52 by user              #+#    #+#             */
-/*   Updated: 2022/08/10 10:13:44 by user             ###   ########.fr       */
+/*   Created: 2022/08/10 16:49:17 by pingpanu          #+#    #+#             */
+/*   Updated: 2022/08/11 15:34:29 by pingpanu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,17 +37,23 @@
 ** 14) Use waitpid to observe status of both cmds, and it's finish now.
 */
 
-int main(int argc, char **argv, char **envp)
+void	error_exit(char *message, int ret)
 {
-    int     fd1;
-    int     fd2;
+	perror(message);
+	exit(ret);
+}
 
-    if (argc != 5)
-        return 1;
-    fd1 = open(argv[1], O_RDONLY);
-    fd2 = open(argv[4], O_CREAT | O_RDWR | O_TRUNC, 0644);
-    if (fd1 < 0 || fd2 < 0)
-        return (-1);
-    pipex(fd1, fd2, argv, envp);
-    return (0);
+int	main(int argc, char **argv, char **envp)
+{
+	int		fd1;
+	int		fd2;
+
+	if (argc != 5)
+		error_exit("Arguments: ", 1);
+	fd1 = open(argv[1], O_RDONLY);
+	fd2 = open(argv[4], O_CREAT | O_RDWR | O_TRUNC, 0644);
+	if (fd1 < 0 || fd2 < 0)
+		error_exit("Infile/Outfile FD: ", -1);
+	pipex(fd1, fd2, argv, envp);
+	return (0);
 }
