@@ -6,7 +6,7 @@
 /*   By: user <user@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/09 21:02:45 by user              #+#    #+#             */
-/*   Updated: 2022/08/11 15:25:18 by pingpanu         ###   ########.fr       */
+/*   Updated: 2022/08/15 21:08:08 by user             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,9 +23,17 @@
 # include <sys/wait.h>
 # include <errno.h>
 
+/*this struct is for cmd parameters*/
+typedef struct s_cmd
+{
+    int     fd;
+    char    **split_cmd;
+    char    *cmd_path;
+}   t_cmd;
+
 /*these are mandatory function*/
 void	error_exit(char *message, int ret);
-void	pipex(int file1, int file2, char **argv, char **envp);
+void	pipex(t_cmd in, t_cmd out, char **envp);
 void	free_charr(char **arr);
 char	*get_cmdpath(char *cmd, char **envp);
 #endif

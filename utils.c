@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pingpanu <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: user <user@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/10 16:49:03 by pingpanu          #+#    #+#             */
-/*   Updated: 2022/08/11 15:25:13 by pingpanu         ###   ########.fr       */
+/*   Updated: 2022/08/14 23:54:48 by user             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,10 +73,18 @@ char	*get_cmdpath(char *cmd, char **envp)
 int	main(int argc, char **argv, char **envp)
 {
 	char	*which;
+	char	**cmd;
 
 	if (argc < 2)
 		return (1);
-	which = get_cmdpath(argv[1], envp);
+	cmd = ft_split(argv[1], ' ');
+	int	i = 0;
+	while (cmd[i])
+	{
+		printf("%d %s\n",i, cmd[i]);
+		i++;
+	}
+	which = get_cmdpath(cmd[0], envp);
 	printf("%s\n", which);
 	free(which);
 	return (0);

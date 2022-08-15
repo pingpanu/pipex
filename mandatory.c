@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   mandatory.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pingpanu <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: user <user@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/10 16:49:17 by pingpanu          #+#    #+#             */
-/*   Updated: 2022/08/11 15:34:29 by pingpanu         ###   ########.fr       */
+/*   Updated: 2022/08/15 21:18:48 by user             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,17 +43,58 @@ void	error_exit(char *message, int ret)
 	exit(ret);
 }
 
+/*static void		check_strs(t_cmd *in, t_cmd *out)
+{
+	if (!in->split_cmd)
+	{
+		free_charr(in->split_cmd);
+		error_exit("Cmd1 :", 3);
+	}
+	if (!in->cmd_path)
+	{
+		free(in->cmd_path);
+		error_exit("Cmd1 path :", 3);
+	}
+	if (!out->split_cmd)
+	{
+		free_charr(out->split_cmd);
+		error_exit("Cmd2 :", 3);
+	}
+	if (!out->cmd_path)
+	{
+		free(out->cmd_path);
+		error_exit("Cmd2 path :", 3);
+	}
+}*/
+
+static void		free_tcmd(t_cmd *in, t_cmd *out)
+{
+	free(in->cmd_path);
+	free_charr(in->split_cmd);
+	free(out->cmd_path);
+	free_charr(out->split_cmd);
+}
+
 int	main(int argc, char **argv, char **envp)
 {
-	int		fd1;
-	int		fd2;
+	t_cmd	in;
+	t_cmd	out;
 
 	if (argc != 5)
 		error_exit("Arguments: ", 1);
-	fd1 = open(argv[1], O_RDONLY);
-	fd2 = open(argv[4], O_CREAT | O_RDWR | O_TRUNC, 0644);
-	if (fd1 < 0 || fd2 < 0)
-		error_exit("Infile/Outfile FD: ", -1);
-	pipex(fd1, fd2, argv, envp);
+	in.fd = open(argv[1], O_RDONLY);
+	if (in.fd < 0)
+		error_exit("Infile FD :", -1);
+	out.fd = open(argv[4], O_CREAT | O_RDWR | O_TRUNC, 0644);
+	if (out.fd < 0)
+		error_exit("Outfile FD :", -1);
+	in.split_cmd = ft_split(argv[2], ' ');
+	in.cmd_path = get_cmdpath(in.split_cmd[0], envp);
+	out.split_cmd = ft_split(argv[3], ' ');
+	out.cmd_path = get_cmdpath(out.split_cmd[0], envp);
+	/*the check_strs may not be neccessary function
+	check_strs(&in, &out);*/
+	pipex(in, out, envp);
+	free_tcmd(&in, &out);
 	return (0);
 }

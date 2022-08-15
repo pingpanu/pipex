@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pipex.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pingpanu <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: user <user@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/10 16:48:39 by pingpanu          #+#    #+#             */
-/*   Updated: 2022/08/11 15:35:06 by pingpanu         ###   ########.fr       */
+/*   Updated: 2022/08/15 21:14:15 by user             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,59 +45,25 @@
     return (0);
 }*/
 
-static void	child_one_proc(int file1, int *end, char *cmd1, char **envp)
+static void	child_one_proc(t_cmd in, int *end, char **envp)
 {
-	char	*cmd1_path;
-	char	**split_cmd1;
-
-	dup2(file1, STDIN_FILENO);
+	dup2(in.fd, STDIN_FILENO);
 	dup2(end[1], STDOUT_FILENO);
 	close(end[0]);
 	close(end[1]);
-	split_cmd1 = ft_split(cmd1, ' ');
-	if (!split_cmd1)
-	{
-		free_charr(split_cmd1);
-		error_exit("Malloc :", 3);
-	}
-	cmd1_path = get_cmdpath(cmd1, envp);
-	if (!cmd1_path)
-	{
-		free(cmd1_path);
-		error_exit("Malloc :", 3);
-	}
-	execve(cmd1_path, split_cmd1, envp);
-	free_charr(split_cmd1);
-	free(cmd1_path);
+	execve(in.cmd_path, in.split_cmd, envp);
 }
 
-static void	child_two_proc(int file2, int *end, char *cmd2, char **envp)
+static void	child_two_proc(t_cmd out, int *end, char **envp)
 {
-	char	*cmd2_path;
-	char	**split_cmd2;
-
 	dup2(end[0], STDIN_FILENO);
-	dup2(file2, STDOUT_FILENO);
+	dup2(out.fd, STDOUT_FILENO);
 	close(end[0]);
 	close(end[1]);
-	split_cmd2 = ft_split(cmd2, ' ');
-	if (!split_cmd2)
-	{
-		free_charr(split_cmd2);
-		error_exit("Malloc :", 3);
-	}
-	cmd2_path = get_cmdpath(split_cmd2[0], envp);
-	if (!cmd2_path)
-	{
-		free(cmd2_path);
-		error_exit("Malloc :", 3);
-	}
-	execve(cmd2_path, split_cmd2, envp);
-	free_charr(split_cmd2);
-	free(cmd2_path);
+	execve(out.cmd_path, out.split_cmd, envp);
 }
 
-void	pipex(int file1, int file2, char **argv, char **envp)
+void	pipex(t_cmd in, t_cmd out, char **envp)
 {
 	int	end[2];
 	int	status;
@@ -110,12 +76,12 @@ void	pipex(int file1, int file2, char **argv, char **envp)
 	if (pid1 < 0)
 		error_exit("Fork: ", -2);
 	if (pid1 == 0)
-		child_one_proc(file1, end, argv[2], envp);
+		child_one_proc(in, end, envp);
 	pid2 = fork();
 	if (pid2 < 0)
 		error_exit("Fork: ", -2);
 	if (pid2 == 0)
-		child_two_proc(file2, end, argv[3], envp);
+		child_two_proc(out, end, envp);
 	close(end[0]);
 	close(end[1]);
 	waitpid(pid1, &status, 0);
