@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pipex.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: user <user@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: pingpanu <pingpanu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/09 21:02:45 by user              #+#    #+#             */
-/*   Updated: 2022/08/15 21:08:08 by user             ###   ########.fr       */
+/*   Updated: 2022/08/16 16:20:24 by pingpanu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ typedef struct s_cmd
 }   t_cmd;
 
 /*these are mandatory function*/
-void	error_exit(char *message, int ret);
+void	error_exit(char *message, int per);
 void	pipex(t_cmd in, t_cmd out, char **envp);
 void	free_charr(char **arr);
 char	*get_cmdpath(char *cmd, char **envp);
